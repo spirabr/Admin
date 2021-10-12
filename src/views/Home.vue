@@ -12,9 +12,9 @@
         <p class="timestamps"> timestamps </p>
       </div>
       <div :class="(i-1) % 8 < 4 ? 'grid' : 'grid alt-color'" v-for="i in audios.length" :key="i">
-        <p class="index"> {{i}} </p>
-        <p class="audios"> {{audios[i - 1]}} </p>
-        <p class="timestamps"> {{timestamps[i - 1]}} </p>
+        <p class="index"> {{audios.length - i + 1}} </p>
+        <p class="audios"> {{audios[(audios.length - i)]}} </p>
+        <p class="timestamps"> {{timestamps[(audios.length - i)]}} </p>
       </div>
     </body>
   </div>
@@ -32,8 +32,9 @@ export default Vue.extend({
   }),
   async created() {
     const response = await axios.get(`${process.env.VUE_APP_BACKEND_URL}/metrics/audios`);
-    this.audios = response.data.sort().map((audio : string) => audio.substring(23).replaceAll('_', ' '))
-    this.timestamps = response.data.sort().map((timestamp : string) => timestamp.substring(0, 23).replace('_', ' '));
+    const sortedArray = response.data.sort(); 
+    this.audios = sortedArray.map((audio: string) => audio.substring(23).replaceAll('_', ' '))
+    this.timestamps = sortedArray.map((timestamp: string) => timestamp.substring(0, 23).replace('_', ' '));
   }
 });
 </script>
